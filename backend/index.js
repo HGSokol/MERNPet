@@ -15,20 +15,17 @@ app.use(cors());
 app.use(express.json());
 app.use(authRoutes);
 
-try {
-  mongoose
-    .connect(
-      `mongodb+srv://${MongoAcc}:${MongoPass}@testcase.4m6jw4x.mongodb.net/?retryWrites=true&w=majority`,
-    )
-    .then(() => {
-      console.log('Подключение к БД');
+mongoose
+  .connect(
+    `mongodb+srv://${MongoAcc}:${MongoPass}@testcase.4m6jw4x.mongodb.net/test?retryWrites=true&w=majority`,
+  )
+  .then(() => {
+    console.log('Подключение к БД');
 
-      app.listen(Port, (err) => {
-        err
-          ? console.log(`Ошибка запуска сервера: ${err}`)
-          : console.log(`Сервер запущен на порту: ${Port}`);
-      });
+    app.listen(Port, (err) => {
+      err
+        ? console.log(`Ошибка запуска сервера: ${err}`)
+        : console.log(`Сервер запущен на порту: ${Port}`);
     });
-} catch (error) {
-  console.log(error);
-}
+  })
+  .catch((e) => console.log(`Ошибка подключения к БД: ${e}`));

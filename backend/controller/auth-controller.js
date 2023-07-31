@@ -1,45 +1,99 @@
-import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 
 import User from '../model/User.js';
 
 export const login = async (req, res) => {
-  const { token, email, password } = req.body;
+  try {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      return res.status(400).json({
+        message: 'не правильно введенные данные',
+        ...error,
+      });
+    }
 
-  const candidate = await User.findOne({ email });
-  if (!candidate) {
-    return res.status(401).json({ message: 'пользователя с таким email не существует' });
+    const { email, password } = req.body;
+    const candidate = await User.findOne({ email });
+    if (!candidate) {
+      return res.status(404).json({ message: 'Пользователя не найден' });
+    }
+
+    const isValidPass = await bcrypt.compare(password, candidate.password);
+    if (!isValidPass) return res.status(400).json({ message: 'Не верный логин или пароль' });
+
+    const { password: hashPass, ...user } = candidate._doc;
+    const jwtSend = jwt.sign({ ...user._id }, process.env.SECRET, { expiresIn: '1d' });
+
+    res.status(200).json({
+      ...user,
+      token: jwtSend,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: 'не удалось авторизоваться',
+    });
   }
-
-  const jwtDecode = jwt.verify(token, process.env.SECRET);
-
-  if (candidate._id.toString() !== jwtDecode._id) {
-    return res.status(401).json({ message: 'не правильный токен' });
-  }
-
-  res.status(200).json({
-    token: token,
-    message: 'успешный вход в систему',
-  });
 };
 
 export const registration = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      return res.status(400).json({
+        message: 'не правильно введенные данные',
+        ...error,
+      });
+    }
 
-  const candidate = await User.find({ email });
-  if (candidate.length > 0) {
-    return res.status(401).json({ message: 'такой пользователь уже существует' });
+    const { email, password, avatarUrl = null } = req.body;
+
+    const candidate = await User.find({ email });
+    if (candidate.length > 0) {
+      return res.status(401).json({ message: 'такой пользователь уже существует' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+
+    const user = new User({ ...req.body, ...{ avatarUrl, password: hashPassword } });
+    const { _id } = await user.save();
+
+    const jwtSend = jwt.sign({ _id }, process.env.SECRET, { expiresIn: '1d' });
+
+    res.status(201).json({
+      token: jwtSend,
+      message: 'Пользователь успешно создан',
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: 'не удалось зарегистрироваться',
+    });
   }
+};
 
-  const hashPassword = bcryptjs.hashSync(password, 7);
+export const checkMe = async (req, res) => {
+  try {
+    const candidate = await User.findById(req.userId);
+    if (!candidate) {
+      return res.status(404).json({
+        message: 'Пользователь не найден',
+      });
+    }
 
-  const user = new User({ email, password: hashPassword });
-  const { _id } = await user.save();
+    const { password, ...user } = candidate._doc;
 
-  const jwtSend = jwt.sign({ _id }, process.env.SECRET);
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
 
-  res.status(201).json({
-    token: jwtSend,
-    message: 'Пользователь успешно создан',
-  });
+    res.status(500).json({
+      message: 'Не удалось получить информацию о пользователе',
+    });
+  }
 };
