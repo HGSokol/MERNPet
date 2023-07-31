@@ -5,7 +5,7 @@ export const registerValidation = [
   body('password', 'Пароль должен содержать минимум 5 символов').isLength({ min: 5, max: 25 }),
   body('name', 'Имя должно содержать минимум 2 символа').isLength({ min: 2 }),
   body('lastname', 'Имя должно содержать минимум 2 символа').isLength({ min: 2 }),
-  body('avatarUrl', 'Не верная ссылка на аватар').optional().isURL(),
+  body('avatarUrl', 'Не верная ссылка на изображение').optional().isURL(),
 ];
 
 export const loginValidation = [

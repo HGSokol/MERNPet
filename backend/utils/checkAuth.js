@@ -1,6 +1,17 @@
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 
+import User from '../model/User.js';
+
+export const checkAuth = async (req, res) => {
+  const candidate = await User.findById(req.userId);
+  if (!candidate) {
+    return res.status(404).json({
+      message: 'Пользователь не найден',
+    });
+  }
+};
+
 export default async (req, res, next) => {
   try {
     const error = validationResult(req);
@@ -15,8 +26,8 @@ export default async (req, res, next) => {
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.SECRET);
-
         req.userId = decoded;
+
         next();
       } catch (error) {
         return res.status(403).json({
