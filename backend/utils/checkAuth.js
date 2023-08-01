@@ -1,17 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 
-import User from '../model/User.js';
-
-export const checkAuth = async (req, res) => {
-  const candidate = await User.findById(req.userId);
-  if (!candidate) {
-    return res.status(404).json({
-      message: 'Пользователь не найден',
-    });
-  }
-};
-
 export default async (req, res, next) => {
   try {
     const error = validationResult(req);

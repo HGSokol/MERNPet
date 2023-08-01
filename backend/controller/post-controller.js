@@ -1,10 +1,7 @@
 import Post from '../model/Post.js';
-import { checkAuth } from '../utils/checkAuth.js';
 
 export const getAllPosts = async (req, res) => {
   try {
-    await checkAuth(req, res);
-
     const posts = await Post.find().populate('author').exec();
     if (!posts) {
       return res.status(404).json({
@@ -23,8 +20,6 @@ export const getAllPosts = async (req, res) => {
 
 export const getPost = async (req, res) => {
   try {
-    await checkAuth(req, res);
-
     const postId = req.params.id;
 
     // т.к нам ужно обновлять количество просмотров, то используем не findById, а findOneAndUpdate
@@ -54,8 +49,6 @@ export const getPost = async (req, res) => {
 
 export const createPost = async (req, res) => {
   try {
-    await checkAuth(req, res);
-
     const document = new Post({
       ...req.body,
       author: req.userId,
@@ -73,8 +66,6 @@ export const createPost = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   try {
-    await checkAuth(req, res);
-
     const postId = req.params.id;
 
     Post.findByIdAndUpdate({ _id: postId }, { ...req.body })
@@ -105,8 +96,6 @@ export const updatePost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   try {
-    await checkAuth(req, res);
-
     const postId = req.params.id;
 
     // проверка создатель статьи
