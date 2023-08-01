@@ -2,11 +2,20 @@
   "name": "fullstackmern",
   "version": "1.0.0",
   "description": "testPetProjectMERN",
-  "main": "index.js",
+  "main": "main.jsx",
   "type": "module",
   "scripts": {
-    "server": "nodemon backend/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client:dev": "vite",
+    "server:dev": "nodemon backend/index.js",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:build": "vite build --outDir dist/server --ssr backend/index.js ",
+    "client:build": "vite build",
+    "build": "npm run server:build && npm run client:build",
+    "preview:client": "vite preview --host",
+    "preview:server": "node dist/server/index.js",
+    "preview": "concurrently \"vite preview --host\" \"node dist/server/index.js\"",
+    "test": "prettier --check . && eslint . && stylelint \"**/*.css\"",
+    "start": "node backend/index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,15 +23,26 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^8.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.1",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "nodemon": "^3.0.1",
+    "vite": "^4.4.5"
   }
 }

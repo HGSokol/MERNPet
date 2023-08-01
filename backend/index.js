@@ -14,13 +14,13 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/api/uploads', express.static('uploads'));
+app.use('/api/uploads', express.static('backend/uploads'));
 app.use(authRoutes);
 app.use(postRoutes);
 
 mongoose
   .connect(
-    `mongodb+srv://${MongoAcc}:${MongoPass}@testcase.4m6jw4x.mongodb.net/test?retryWrites=true&w=majority`,
+    `mongodb+srv://${MongoAcc}:${MongoPass}@testcase.4m6jw4x.mongodb.net/test?retryWrites=true&w=majority`
   )
   .then(() => {
     console.log('Подключение к БД');
