@@ -24,7 +24,7 @@ export const login = async (req, res) => {
     if (!isValidPass) return res.status(400).json({ message: 'Не верный логин или пароль' });
 
     const { password: hashPass, ...user } = candidate._doc;
-    const jwtSend = jwt.sign({ ...user._id }, process.env.SECRET, { expiresIn: '1d' });
+    const jwtSend = jwt.sign({ _id: user._id.toString() }, process.env.SECRET, { expiresIn: '1d' });
 
     res.status(200).json({
       ...user,
