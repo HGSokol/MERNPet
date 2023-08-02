@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import posts from './feature/posts'
-import auth from './feature/posts'
+import postsReducer from './feature/posts'
+import authReducer from './feature/posts'
 
 const store = configureStore({
   reducer:{
-    posts,
-    auth
-  }
+    posts: postsReducer,
+    auth: authReducer
+  },
 })
 
 

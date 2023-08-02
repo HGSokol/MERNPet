@@ -8,11 +8,11 @@ import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 
 import styles from './Post.module.scss';
+import IMG from '../../../public/noavatar.png';
 import { UserInfo } from '../UserInfo';
-import { PostSkeleton } from './Skeleton';
 
 interface PostTypes {
-  id?: number;
+  id?: number | string;
   title?: string;
   createdAt?: string;
   imageUrl?: string;
@@ -25,7 +25,6 @@ interface PostTypes {
   tags?: string[];
   children?: JSX.Element;
   isFullPost?: boolean;
-  isLoading?: string;
   isEditable?: boolean;
 }
 
@@ -40,13 +39,8 @@ export const Post = ({
   tags,
   children,
   isFullPost,
-  isLoading,
   isEditable,
 }: PostTypes) => {
-  if (isLoading) {
-    return <PostSkeleton />;
-  }
-
   const onClickRemove = () => {};
 
   return (
@@ -66,7 +60,7 @@ export const Post = ({
       {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
-          src={imageUrl}
+          src={user?.avatarUrl || IMG}
           alt={title}
         />
       )}

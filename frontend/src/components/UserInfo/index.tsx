@@ -1,5 +1,6 @@
 import React from 'react';
 
+import IMG from '../../../public/noavatar.png';
 import styles from './UserInfo.module.scss';
 
 interface UserInfoTypes {
@@ -15,11 +16,7 @@ export const UserInfo = ({
 }: UserInfoTypes) => {
   return (
     <div className={styles.root}>
-      <img
-        className={styles.avatar}
-        src={avatarUrl || '/noavatar.png'}
-        alt={fullName}
-      />
+      <img className={styles.avatar} src={avatarUrl || IMG} alt={fullName} />
       <div className={styles.userDetails}>
         <span className={styles.userName}>{fullName}</span>
         <span className={styles.additional}>{additionalText}</span>
