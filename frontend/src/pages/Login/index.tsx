@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './Login.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +14,7 @@ import { FormLoginValues } from '../../@types/appTypes';
 
 export const Login = () => {
   const token = useSelector((state: RootState) => state.auth.token);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -35,6 +37,7 @@ export const Login = () => {
         ...values,
       })
     );
+    navigate('/');
   };
 
   return (

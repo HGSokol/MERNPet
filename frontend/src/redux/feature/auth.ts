@@ -5,7 +5,7 @@ import { FormLoginValues, FormRegistrationValues, PostType } from '../../@types/
 
 export interface AuthSliceType {
   user: {
-    data: PostType['author'],
+    data: PostType['author'] | null,
     status: 'loading'| 'error' | 'fulfilled'
   },
   token: string,
@@ -54,17 +54,22 @@ const initialState: AuthSliceType = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers:{},
+  reducers:{
+      logout: (state) => {
+        state.token = '';
+        state.user.data = null;
+      },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUserToken.fulfilled, (state, { payload } ) => {
       state.token = payload as string ;
     }),
     builder.addCase(fetchUser.pending, (state) => {
-      state.user.data = {};
+      state.user.data = null;
       state.user.status = 'loading';
     }),
     builder.addCase(fetchUser.rejected, (state) => {
-      state.user.data = {};
+      state.user.data = null;
       state.user.status = 'error';
     }),
     builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
@@ -75,6 +80,6 @@ const authSlice = createSlice({
   },
 })
 
-// export {} = authSlice.actions
+export const { logout } = authSlice.actions
 
 export default authSlice.reducer

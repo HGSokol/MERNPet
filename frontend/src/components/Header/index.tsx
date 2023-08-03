@@ -4,11 +4,20 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
 import styles from './Header.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { logout } from '../../redux/feature/auth';
 
 export const Header = () => {
-  const isAuth = false;
+  const token = useSelector((state: RootState) => state.auth.token);
+  const dispatch = useDispatch();
 
-  const onClickLogout = () => {};
+  const onClickLogout = () => {
+    dispatch(logout());
+    localStorage.clear();
+  };
+
+  console.log(token);
 
   return (
     <div className={styles.root}>
@@ -18,7 +27,7 @@ export const Header = () => {
             <div>MERN BLOG</div>
           </Link>
           <div className={styles.buttons}>
-            {!isAuth ? (
+            {token ? (
               <>
                 <Link to="/posts/create">
                   <Button variant="contained">Написать статью</Button>
