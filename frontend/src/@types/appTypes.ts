@@ -1,13 +1,13 @@
 export interface PostType {
   author?: {
-    avatarUrl: string;
-    createdAt: string;
-    email: string;
-    lastname: string;
-    name: string;
-    password: string;
-    updatedAt: string;
-    _id: string;
+    avatarUrl?: string;
+    createdAt?: string;
+    email?: string;
+    lastname?: string;
+    name?: string;
+    password?: string;
+    updatedAt?: string;
+    _id?: string;
   };
   createdAt?: string;
   tags?: string[];
@@ -29,3 +29,15 @@ export interface PostsSliceType {
     status: 'loading'| 'error' | 'fulfilled'
   }
 }
+
+export type FormRegistrationValues = {
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+};
+
+export type FormLoginValues = {
+  email: string;
+  password: string;
+};

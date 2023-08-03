@@ -6,8 +6,31 @@ import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 
 import styles from './Registration.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserToken } from '../../redux/feature/auth';
+import { AppDispatch, RootState } from '../../redux/store';
+import { useForm } from 'react-hook-form';
+import { FormRegistrationValues } from '../../@types/appTypes';
 
 export const Registration = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isValid },
+  } = useForm<FormRegistrationValues>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onChange',
+  });
+
+  const fetchAuth = (values: FormRegistrationValues) => {
+    dispatch(fetchUserToken(values));
+  };
+
   return (
     <Paper classes={{ root: styles.root }}>
       <Typography classes={{ root: styles.title }} variant="h5">
@@ -16,12 +39,60 @@ export const Registration = () => {
       <div className={styles.avatar}>
         <Avatar sx={{ width: 100, height: 100 }} />
       </div>
-      <TextField className={styles.field} label="Полное имя" fullWidth />
-      <TextField className={styles.field} label="E-Mail" fullWidth />
-      <TextField className={styles.field} label="Пароль" fullWidth />
-      <Button size="large" variant="contained" fullWidth>
-        Зарегистрироваться
-      </Button>
+      <form onSubmit={handleSubmit(fetchAuth)}>
+        <TextField
+          className={styles.field}
+          label="Имя"
+          {...register('name', {
+            required: 'Укажите Имя',
+          })}
+          error={Boolean(errors?.name?.message)}
+          helperText={errors?.name?.message}
+          fullWidth
+        />
+        <TextField
+          className={styles.field}
+          label="Фамилия"
+          {...register('lastname', {
+            required: 'Укажите Фамилию',
+          })}
+          error={Boolean(errors?.lastname?.message)}
+          helperText={errors?.lastname?.message}
+          fullWidth
+        />
+        <TextField
+          {...register('email', {
+            required: 'Укажите почту',
+            pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+          })}
+          className={styles.field}
+          label="E-Mail"
+          type="email"
+          error={Boolean(errors?.email?.message)}
+          helperText={errors?.email?.message}
+          fullWidth
+        />
+        <TextField
+          {...register('password', {
+            required: 'Укажите пароль',
+            minLength: 5,
+          })}
+          className={styles.field}
+          label="Пароль"
+          error={Boolean(errors?.password?.message)}
+          helperText={errors?.password?.message}
+          fullWidth
+        />
+        <Button
+          disabled={!isValid}
+          type="submit"
+          size="large"
+          variant="contained"
+          fullWidth
+        >
+          Зарегистрироваться
+        </Button>
+      </form>
     </Paper>
   );
 };
