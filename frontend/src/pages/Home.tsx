@@ -9,17 +9,19 @@ import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { PostSkeleton } from '../components/Post/Skeleton';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { fetchPosts } from '../redux/feature/posts';
+import { fetchPosts, fetchTags } from '../redux/feature/posts';
 import { AppDispatch, RootState } from '../redux/store';
 
 export const Home = () => {
   const { posts, tags } = useSelector((state: RootState) => state.posts);
   const dispatch = useDispatch<AppDispatch>();
 
-  const isLoading = posts.status === 'loading';
+  const isLoadingPosts = posts.status === 'loading';
+  const isLoadingTags = posts.status === 'loading';
 
   useEffect(() => {
     dispatch(fetchPosts());
+    dispatch(fetchTags());
   }, []);
 
   console.log(posts, tags);
@@ -35,7 +37,7 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
-          {isLoading ? (
+          {isLoadingPosts ? (
             <PostSkeleton />
           ) : (
             posts.items.map(
@@ -62,10 +64,7 @@ export const Home = () => {
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock
-            items={['react', 'typescript', 'заметки']}
-            isLoading={isLoading}
-          />
+          <TagsBlock items={tags.items} isLoading={isLoadingTags} />
           <CommentsBlock
             items={[
               {
@@ -83,7 +82,7 @@ export const Home = () => {
                 text: 'When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top',
               },
             ]}
-            isLoading={isLoading}
+            isLoading={isLoadingPosts}
           />
         </Grid>
       </Grid>

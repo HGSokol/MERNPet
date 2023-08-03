@@ -10,6 +10,7 @@ const { PORT = 3001 } = process.env;
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  root: "frontend",
   server: {
     proxy: {
       '/api': {

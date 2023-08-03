@@ -20,16 +20,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 // checkAuth, authError,
 route.get('/api/posts', PostController.getAllPosts);
-route.get('/api/posts/:id', checkAuth, authError, PostController.getPost);
+// checkAuth, authError,
+route.get('/api/posts/:id', PostController.getPost);
 route.post(
   '/api/posts',
   PostValidations.postCreateValidation,
   checkAuth,
   authError,
-  PostController.createPost,
+  PostController.createPost
 );
 route.put('/api/posts/:id', checkAuth, authError, PostController.updatePost);
 route.delete('/api/posts/:id', checkAuth, authError, PostController.deletePost);
+
+route.get('/api/tags', PostController.getTags);
 
 route.post('/api/upload', upload.single('image'), (req, res) => {
   res.json({

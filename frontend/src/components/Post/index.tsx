@@ -8,7 +8,7 @@ import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 
 import styles from './Post.module.scss';
-import IMG from '../../../public/noavatar.png';
+import IMG from '../../assets/noavatar.png';
 import { UserInfo } from '../UserInfo';
 
 interface PostTypes {
@@ -18,7 +18,8 @@ interface PostTypes {
   imageUrl?: string;
   user?: {
     avatarUrl?: string;
-    fullName?: string;
+    name?: string;
+    lastname?: string;
   };
   viewsCount?: number;
   commentsCount?: number;

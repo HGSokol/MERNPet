@@ -23,7 +23,11 @@ export const getPost = async (req, res) => {
     const postId = req.params.id;
 
     // т.к нам ужно обновлять количество просмотров, то используем не findById, а findOneAndUpdate
-    Post.findOneAndUpdate({ _id: postId }, { $inc: { viewsCount: 1 } }, { returnDocument: 'after' })
+    Post.findOneAndUpdate(
+      { _id: postId },
+      { $inc: { viewsCount: 1 } },
+      { returnDocument: 'after', populate: { path: 'author' } }
+    )
       .then((post) => {
         if (!post) {
           return res.status(404).json({
@@ -137,6 +141,29 @@ export const deletePost = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: 'Не удалось удалить статью',
+    });
+  }
+};
+
+export const getTags = async (req, res) => {
+  try {
+    const posts = await Post.find().limit(5).exec();
+    if (!posts) {
+      return res.status(404).json({
+        message: 'У вас нет статей',
+      });
+    }
+
+    const tags = posts
+      .map((e) => e.tags)
+      .flat()
+      .slice(0, 5);
+
+    res.status(200).json(tags);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Не удалось получить статью',
     });
   }
 };

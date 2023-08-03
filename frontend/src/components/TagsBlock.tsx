@@ -15,16 +15,17 @@ interface TagsBlockType {
   isLoading: boolean;
 }
 
-export const TagsBlock = ({ items, isLoading = true }: TagsBlockType) => {
+export const TagsBlock = ({ items, isLoading }: TagsBlockType) => {
   return (
     <SideBlock title="Тэги">
       <List>
         {(isLoading ? [...Array(5)] : items).map((name, i) => (
           <Link
+            key={i}
             style={{ textDecoration: 'none', color: 'black' }}
             to={`/tags/${name}`}
           >
-            <ListItem key={i} disablePadding>
+            <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
                   <TagIcon />
