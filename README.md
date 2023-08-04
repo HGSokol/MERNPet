@@ -1,19 +1,19 @@
 MERN pet blog
 
---start in dev
+`start`
 * npm run client:dev
 * npm run server:dev
---both
-~ npm run dev
+  
+\*both - npm run dev \*
 
---build
+`build`
 * npm run client:build
 * npm run server:build
---both
-~ npm run build
+  
+\*both - npm run build \*
 
---preview after build
+`preview` after build
 * npm run preview:client
 * npm run preview:server
-both
-~ npm run preview
+  
+\*both - npm run preview \*
