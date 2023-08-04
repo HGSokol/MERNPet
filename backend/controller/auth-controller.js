@@ -21,10 +21,13 @@ export const login = async (req, res) => {
     }
 
     const isValidPass = await bcrypt.compare(password, candidate.password);
-    if (!isValidPass) return res.status(400).json({ message: 'Не верный логин или пароль' });
+    if (!isValidPass)
+      return res.status(400).json({ message: 'Не верный логин или пароль' });
 
     const { password: hashPass, ...user } = candidate._doc;
-    const jwtSend = jwt.sign({ _id: user._id.toString() }, process.env.SECRET, { expiresIn: '1d' });
+    const jwtSend = jwt.sign({ _id: user._id.toString() }, process.env.SECRET, {
+      expiresIn: '1d',
+    });
 
     res.status(200).json({
       ...user,
@@ -53,20 +56,25 @@ export const registration = async (req, res) => {
 
     const candidate = await User.find({ email });
     if (candidate.length > 0) {
-      return res.status(401).json({ message: 'такой пользователь уже существует' });
+      return res
+        .status(401)
+        .json({ message: 'такой пользователь уже существует' });
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    const user = new User({ ...req.body, ...{ avatarUrl, password: hashPassword } });
+    const user = new User({
+      ...req.body,
+      ...{ avatarUrl, password: hashPassword },
+    });
     const { _id } = await user.save();
 
     const jwtSend = jwt.sign({ _id }, process.env.SECRET, { expiresIn: '1d' });
 
     res.status(201).json({
+      ...user,
       token: jwtSend,
-      message: 'Пользователь успешно создан',
     });
   } catch (error) {
     console.log(error);

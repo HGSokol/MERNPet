@@ -1,23 +1,76 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { SimpleMdeReact, SimpleMDEReactProps } from 'react-simplemde-editor';
+import { useForm } from 'react-hook-form';
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
+import { dataType, FormCreatePostValues } from '../../@types/appTypes';
+import axios from '../../axios';
 
 export const AddPost = () => {
-  const imageUrl = '';
-  const [value, setValue] = React.useState('');
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isValid },
+  } = useForm<FormCreatePostValues>({
+    defaultValues: {
+      title: '',
+      tags: '',
+    },
+    mode: 'onChange',
+  });
+  const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = React.useState('');
+  const [text, setText] = React.useState('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleChangeFile = () => {};
+  const handleSubmitForm = async (value: FormCreatePostValues) => {
+    try {
+      const { title, tags } = value;
 
-  const onClickRemoveImage = () => {};
+      const data: dataType = {
+        title,
+        text,
+      };
 
-  const onChange = React.useCallback((value) => {
-    setValue(value);
+      if (tags)
+        data.tags = tags
+          .replace(/[;, ]/g, ' ')
+          .split(' ')
+          .filter((e) => e !== '');
+      if (imageUrl && imageUrl.length > 0) data.imageUrl = imageUrl;
+
+      const post = await axios.post('/api/posts', data);
+      const { _id } = post.data;
+
+      navigate(`/posts/${_id}`);
+    } catch (error) {
+      console.log('ошибка создания поста');
+    }
+  };
+
+  const handleChangeFile = async (e: any) => {
+    const formData = new FormData();
+    const file = e.target.files[0];
+    formData.append('image', file);
+
+    const { data } = await axios.post('/api/upload', formData);
+
+    setImageUrl(data.url);
+  };
+
+  const onClickRemoveImage = () => {
+    setImageUrl('');
+    inputRef.current!.value = '';
+  };
+
+  const onChange = React.useCallback((value: string) => {
+    setText(value);
   }, []);
 
   const options: SimpleMDEReactProps = React.useMemo(
@@ -37,50 +90,69 @@ export const AddPost = () => {
 
   return (
     <Paper style={{ padding: 30 }}>
-      <Button variant="outlined" size="large">
-        Загрузить превью
-      </Button>
-      <input type="file" onChange={handleChangeFile} hidden />
-      {imageUrl && (
-        <Button variant="contained" color="error" onClick={onClickRemoveImage}>
-          Удалить
+      <form onSubmit={handleSubmit(handleSubmitForm)}>
+        <Button
+          onClick={() => inputRef.current?.click()}
+          variant="outlined"
+          size="large"
+        >
+          Загрузить превью
         </Button>
-      )}
-      {imageUrl && (
-        <img
-          className={styles.image}
-          src={`http://localhost:4444${imageUrl}`}
-          alt="Uploaded"
+        <input ref={inputRef} type="file" onChange={handleChangeFile} hidden />
+        {imageUrl && (
+          <>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={onClickRemoveImage}
+            >
+              Удалить
+            </Button>
+            <img
+              className={styles.image}
+              src={`http://localhost:3001${imageUrl}`}
+              alt="Uploaded"
+            />
+          </>
+        )}
+        <br />
+        <br />
+        <TextField
+          classes={{ root: styles.title }}
+          variant="standard"
+          placeholder="Заголовок статьи..."
+          {...register('title', {
+            required: 'Укажите Заголовок',
+          })}
+          fullWidth
         />
-      )}
-      <br />
-      <br />
-      <TextField
-        classes={{ root: styles.title }}
-        variant="standard"
-        placeholder="Заголовок статьи..."
-        fullWidth
-      />
-      <TextField
-        classes={{ root: styles.tags }}
-        variant="standard"
-        placeholder="Тэги"
-        fullWidth
-      />
-      <SimpleMdeReact
-        className={styles.editor}
-        value={value}
-        onChange={onChange}
-        options={options}
-      />
-      <div className={styles.buttons}>
-        <Button size="large" variant="contained">
-          Опубликовать
-        </Button>
-        <Link to="/">
-          <Button size="large">Отмена</Button>
-        </Link>
-      </div>
+        <TextField
+          classes={{ root: styles.tags }}
+          variant="standard"
+          placeholder="Введите тэги через пробелы"
+          {...register('tags')}
+          fullWidth
+        />
+        <SimpleMdeReact
+          className={styles.editor}
+          value={text}
+          onChange={onChange}
+          options={options}
+        />
+        <div className={styles.buttons}>
+          <Button
+            disabled={!isValid || text === ''}
+            type="submit"
+            size="large"
+            variant="contained"
+          >
+            Опубликовать
+          </Button>
+          <Link to="/">
+            <Button size="large">Отмена</Button>
+          </Link>
+        </div>
+      </form>
     </Paper>
   );
 };

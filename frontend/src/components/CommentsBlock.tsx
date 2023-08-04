@@ -8,20 +8,7 @@ import List from '@mui/material/List';
 import Skeleton from '@mui/material/Skeleton';
 
 import { SideBlock } from './SideBlock';
-
-interface UserType {
-  user?: {
-    fullName: string;
-    avatarUrl: string;
-  };
-  text?: string;
-}
-
-interface CommentsBlockTypes {
-  items?: UserType[];
-  children?: ReactNode;
-  isLoading?: boolean;
-}
+import { CommentsBlockTypes } from '../@types/appTypes';
 
 export const CommentsBlock = ({
   items,

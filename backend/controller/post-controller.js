@@ -103,20 +103,20 @@ export const deletePost = async (req, res) => {
     const postId = req.params.id;
 
     // проверка создатель статьи
-    Post.findOne({ _id: postId })
-      .then((post) => {
-        if (post.author !== req.userId) {
-          res.status(400).json({
-            message: 'вы не автор статьи',
-          });
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        return res.status(500).json({
-          message: 'Не удалось удалить статью',
+    try {
+      const post = await Post.findOne({ _id: postId });
+
+      if (post.author.toString() !== req.userId._id) {
+        res.status(400).json({
+          message: 'вы не автор статьи',
         });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: 'Не удалось удалить статью',
       });
+    }
 
     // т.к нам ужно обновлять количество просмотров, то используем не findById, а findOneAndUpdate
     Post.findOneAndDelete({ _id: postId })
@@ -147,7 +147,7 @@ export const deletePost = async (req, res) => {
 
 export const getTags = async (req, res) => {
   try {
-    const posts = await Post.find().limit(5).exec();
+    const posts = await Post.find().limit(10).exec();
     if (!posts) {
       return res.status(404).json({
         message: 'У вас нет статей',

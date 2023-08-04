@@ -21,13 +21,18 @@ export interface PostType {
 
 export interface PostsSliceType {
   posts: {
-    items: PostType[] | [],
-    status: 'loading'| 'error' | 'fulfilled'
-  },
+    items: PostType[] | [];
+    status: 'loading' | 'error' | 'fulfilled';
+  };
   tags: {
-    items: [],
-    status: 'loading'| 'error' | 'fulfilled'
-  }
+    items: string[];
+    status: 'loading' | 'error' | 'fulfilled';
+  };
+}
+
+export interface AuthSliceType {
+  data: PostType['author'] | null;
+  status: 'loading' | 'error' | 'fulfilled';
 }
 
 export type FormRegistrationValues = {
@@ -41,3 +46,35 @@ export type FormLoginValues = {
   email: string;
   password: string;
 };
+
+export type FormCreatePostValues = {
+  title: string;
+  tags: string;
+  imageUrl: FileList;
+};
+
+export interface TagsBlockType {
+  items: string[];
+  isLoading: boolean;
+}
+
+export interface UserType {
+  user?: {
+    fullName: string;
+    avatarUrl: string;
+  };
+  text?: string;
+}
+
+export interface CommentsBlockTypes {
+  items?: UserType[];
+  children?: React.ReactNode;
+  isLoading?: boolean;
+}
+
+export interface dataType {
+  title: string;
+  text: string;
+  tags?: string[];
+  imageUrl?: string;
+}

@@ -1,23 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
 import styles from './Header.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { logout } from '../../redux/feature/auth';
+
+import { AppDispatch, RootState } from '../../redux/store';
+import { logout, selectIsAuth } from '../../redux/feature/auth';
 
 export const Header = () => {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuth = useSelector((state: RootState) =>
+    selectIsAuth(state.auth.data)
+  );
 
   const onClickLogout = () => {
-    dispatch(logout());
-    localStorage.clear();
+    if (window.confirm('Вы действительно хотите выйти?')) {
+      dispatch(logout());
+      localStorage.removeItem('token');
+      navigate('/');
+    }
   };
-
-  console.log(token);
 
   return (
     <div className={styles.root}>
@@ -27,9 +32,9 @@ export const Header = () => {
             <div>MERN BLOG</div>
           </Link>
           <div className={styles.buttons}>
-            {token ? (
+            {isAuth ? (
               <>
-                <Link to="/posts/create">
+                <Link to="/add-post">
                   <Button variant="contained">Написать статью</Button>
                 </Link>
                 <Button

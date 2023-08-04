@@ -9,11 +9,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Skeleton from '@mui/material/Skeleton';
 
 import { SideBlock } from './SideBlock';
-
-interface TagsBlockType {
-  items: string[];
-  isLoading: boolean;
-}
+import { TagsBlockType } from '../@types/appTypes';
 
 export const TagsBlock = ({ items, isLoading }: TagsBlockType) => {
   return (

@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './Registration.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserToken } from '../../redux/feature/auth';
+import { fetchUserRegister, selectIsAuth } from '../../redux/feature/auth';
 import { AppDispatch, RootState } from '../../redux/store';
-import { useForm } from 'react-hook-form';
 import { FormRegistrationValues } from '../../@types/appTypes';
 
 export const Registration = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const isAuth = useSelector((state: RootState) =>
+    selectIsAuth(state.auth.data)
+  );
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/');
+    }
+  }, [isAuth]);
+
   const {
     register,
     handleSubmit,
@@ -28,7 +40,7 @@ export const Registration = () => {
   });
 
   const fetchAuth = (values: FormRegistrationValues) => {
-    dispatch(fetchUserToken(values));
+    dispatch(fetchUserRegister(values));
   };
 
   return (

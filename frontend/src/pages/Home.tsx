@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -13,8 +12,9 @@ import { fetchPosts, fetchTags } from '../redux/feature/posts';
 import { AppDispatch, RootState } from '../redux/store';
 
 export const Home = () => {
-  const { posts, tags } = useSelector((state: RootState) => state.posts);
   const dispatch = useDispatch<AppDispatch>();
+  const { posts, tags } = useSelector((state: RootState) => state.posts);
+  const { data } = useSelector((state: RootState) => state.auth);
 
   const isLoadingPosts = posts.status === 'loading';
   const isLoadingTags = posts.status === 'loading';
@@ -55,7 +55,7 @@ export const Home = () => {
                     viewsCount={viewsCount}
                     commentsCount={3}
                     tags={tags}
-                    isEditable
+                    isEditable={author?._id === data?._id}
                   />
                 );
               }

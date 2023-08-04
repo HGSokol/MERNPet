@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -9,12 +9,21 @@ import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
-import { fetchUser } from '../../redux/feature/auth';
+import { fetchUser, selectIsAuth } from '../../redux/feature/auth';
 import { FormLoginValues } from '../../@types/appTypes';
 
 export const Login = () => {
-  const token = useSelector((state: RootState) => state.auth.token);
+  const isAuth = useSelector((state: RootState) => {
+    return selectIsAuth(state.auth.data);
+  });
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/');
+    }
+  }, [isAuth]);
 
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -37,7 +46,6 @@ export const Login = () => {
         ...values,
       })
     );
-    navigate('/');
   };
 
   return (

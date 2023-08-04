@@ -10,6 +10,10 @@ import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import styles from './Post.module.scss';
 import IMG from '../../assets/noavatar.png';
 import { UserInfo } from '../UserInfo';
+import { deletePost } from '../../redux/feature/posts';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import axios from '../../axios';
 
 interface PostTypes {
   id?: number | string;
@@ -24,7 +28,7 @@ interface PostTypes {
   viewsCount?: number;
   commentsCount?: number;
   tags?: string[];
-  children?: JSX.Element;
+  children?: React.ReactNode;
   isFullPost?: boolean;
   isEditable?: boolean;
 }
@@ -42,7 +46,16 @@ export const Post = ({
   isFullPost,
   isEditable,
 }: PostTypes) => {
-  const onClickRemove = () => {};
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onClickRemove = async () => {
+    try {
+      await axios.delete(`/api/posts/${id}`);
+      dispatch(deletePost(id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
@@ -61,7 +74,7 @@ export const Post = ({
       {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
-          src={user?.avatarUrl || IMG}
+          src={`http://localhost:3001${imageUrl}` || IMG}
           alt={title}
         />
       )}

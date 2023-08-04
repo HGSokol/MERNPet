@@ -21,7 +21,7 @@ const upload = multer({ storage });
 // checkAuth, authError,
 route.get('/api/posts', PostController.getAllPosts);
 // checkAuth, authError,
-route.get('/api/posts/:id', PostController.getPost);
+route.get('/api/posts/:id', checkAuth, authError, PostController.getPost);
 route.post(
   '/api/posts',
   PostValidations.postCreateValidation,

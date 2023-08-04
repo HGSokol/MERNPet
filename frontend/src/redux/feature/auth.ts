@@ -1,85 +1,110 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import axios from 'axios'
-import { FormLoginValues, FormRegistrationValues, PostType } from '../../@types/appTypes'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
-export interface AuthSliceType {
-  user: {
-    data: PostType['author'] | null,
-    status: 'loading'| 'error' | 'fulfilled'
-  },
-  token: string,
-}
+import axios from '../../axios';
+import {
+  AuthSliceType,
+  FormLoginValues,
+  FormRegistrationValues,
+  PostType,
+} from '../../@types/appTypes';
 
-export const fetchUserToken = createAsyncThunk('auth/fetchUserToken', async (params: FormRegistrationValues) => {
-  try {
-    const token = await axios.post('/api/registration', params)
+export const fetchUserRegister = createAsyncThunk(
+  'auth/fetchUserRegister',
+  async (params: FormRegistrationValues) => {
+    try {
+      const user = await axios.post('/api/registration', params);
+      const { token: jwt, ...data } = user.data;
 
-    localStorage.setItem('token', token.data.token)
+      localStorage.setItem('token', jwt);
 
-    return token.data.token as unknown as AuthSliceType['token']
-  } catch (error) {
-    console.log(error)
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-})
+);
 
-export const fetchUser = createAsyncThunk('auth/fetchUser', async (params: FormLoginValues & {token:string} ) => {
-  try {
-    const {token, ...userInfo} = params
-    const user = await axios.post('/api/login', userInfo, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    const {token:jwt, ...data} = user.data
+export const fetchUser = createAsyncThunk(
+  'auth/fetchUser',
+  async (params: FormLoginValues & { token: string | null }) => {
+    try {
+      const { token, ...userInfo } = params;
+      const user = await axios.post('/api/login', userInfo);
+      const { token: jwt, ...data } = user.data;
 
-    localStorage.setItem('token', jwt)
+      localStorage.setItem('token', jwt);
 
-    return {jwt, data}
-  } catch (error) {
-    console.log(error)
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-})
+);
 
+export const fetchMe = createAsyncThunk('auth/fetchMe', async () => {
+  try {
+    const user = await axios.get('api/me');
 
+    return user.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 const initialState: AuthSliceType = {
-  user: {
-    data: {},
-    status: 'loading'
-  },
-  token: localStorage.getItem('token') as string,
-}
+  data: null,
+  status: 'loading',
+};
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers:{
-      logout: (state) => {
-        state.token = '';
-        state.user.data = null;
-      },
+  reducers: {
+    logout: (state) => {
+      state.data = null;
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUserToken.fulfilled, (state, { payload } ) => {
-      state.token = payload as string ;
-    }),
+    builder.addCase(fetchUserRegister.pending, (state, { payload }) => {
+      state.data = null;
+    });
+    builder.addCase(fetchUserRegister.rejected, (state, { payload }) => {
+      state.data = null;
+    });
+    builder.addCase(fetchUserRegister.fulfilled, (state, { payload }) => {
+      state.data = payload as PostType['author'];
+      state.status = 'fulfilled';
+    });
     builder.addCase(fetchUser.pending, (state) => {
-      state.user.data = null;
-      state.user.status = 'loading';
-    }),
+      state.data = null;
+      state.status = 'loading';
+    });
     builder.addCase(fetchUser.rejected, (state) => {
-      state.user.data = null;
-      state.user.status = 'error';
-    }),
+      state.data = null;
+      state.status = 'error';
+    });
     builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
-      state.user.data = payload?.data as PostType['author'];
-      state.token = payload?.jwt as string;
-      state.user.status = 'fulfilled';
-    })
+      state.data = payload as PostType['author'];
+      state.status = 'fulfilled';
+    });
+    builder.addCase(fetchMe.pending, (state) => {
+      state.data = null;
+      state.status = 'loading';
+    });
+    builder.addCase(fetchMe.rejected, (state) => {
+      state.data = null;
+      state.status = 'error';
+    });
+    builder.addCase(fetchMe.fulfilled, (state, { payload }) => {
+      state.data = payload as PostType['author'];
+      state.status = 'fulfilled';
+    });
   },
-})
+});
 
-export const { logout } = authSlice.actions
+export const selectIsAuth = (data: AuthSliceType['data']) => Boolean(data);
 
-export default authSlice.reducer
+export const { logout } = authSlice.actions;
+
+export default authSlice.reducer;
