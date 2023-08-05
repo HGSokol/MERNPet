@@ -47,12 +47,6 @@ export type FormLoginValues = {
   password: string;
 };
 
-export type FormCreatePostValues = {
-  title: string;
-  tags: string;
-  imageUrl: FileList;
-};
-
 export interface TagsBlockType {
   items: string[];
   isLoading: boolean;
@@ -75,6 +69,6 @@ export interface CommentsBlockTypes {
 export interface dataType {
   title: string;
   text: string;
-  tags?: string[];
-  imageUrl?: string;
+  tags: string[];
+  imageUrl: string;
 }

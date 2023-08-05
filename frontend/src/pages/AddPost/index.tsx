@@ -4,43 +4,39 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { SimpleMdeReact, SimpleMDEReactProps } from 'react-simplemde-editor';
-import { useForm } from 'react-hook-form';
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
-import {
-  dataType,
-  FormCreatePostValues,
-  PostType,
-} from '../../@types/appTypes';
+import { dataType } from '../../@types/appTypes';
 import axios from '../../axios';
 
 export const AddPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [imageUrl, setImageUrl] = React.useState('');
-  const [editPost, setEditPost] = React.useState<PostType | null>(null);
+  const [title, setTitle] = React.useState('');
+  const [tags, setTags] = React.useState('');
   const [text, setText] = React.useState('');
+  const [imageUrl, setImageUrl] = React.useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isValid },
-  } = useForm<FormCreatePostValues>({
-    defaultValues: {
-      title: '',
-      tags: '',
-    },
-    mode: 'onChange',
-  });
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`/api/posts/${id}`)
+        .then((e) => {
+          setTitle(e.data.title);
+          setTags(e.data.tags.join(' '));
+          setText(e.data.text);
+          setImageUrl(e.data.imageUrl);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, []);
 
-  const handleSubmitForm = async (value: FormCreatePostValues) => {
+  const handleSubmitForm = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
-      const { title, tags } = value;
-
-      const data: dataType = {
+      event.preventDefault();
+      const data: Partial<dataType> = {
         title,
         text,
       };
@@ -52,11 +48,17 @@ export const AddPost = () => {
           .filter((e) => e !== '');
       if (imageUrl && imageUrl.length > 0) data.imageUrl = imageUrl;
 
-      const post = await axios.post('/api/posts', data);
-      const { _id } = post.data;
+      console.log(data);
 
-      navigate(`/posts/${_id}`);
+      const post = id
+        ? await axios.patch(`/api/posts/${id}`, data)
+        : await axios.post('/api/posts', data);
+
+      const postId = id ? id : post.data._id;
+
+      navigate(`/posts/${postId}`);
     } catch (error) {
+      console.log(error);
       console.log('ошибка создания поста');
     }
   };
@@ -95,21 +97,9 @@ export const AddPost = () => {
     []
   );
 
-  useEffect(() => {
-    if (id) {
-      axios
-        .get(`/api/posts/${id}`)
-        .then((e) => {
-          setEditPost(e.data);
-          setImageUrl(e.data.imageUrl);
-        })
-        .catch((e) => console.log(e));
-    }
-  }, []);
-
   return (
     <Paper style={{ padding: 30 }}>
-      <form onSubmit={handleSubmit(handleSubmitForm)}>
+      <form onSubmit={handleSubmitForm}>
         <Button
           onClick={() => inputRef.current?.click()}
           variant="outlined"
@@ -138,36 +128,34 @@ export const AddPost = () => {
         <br />
         <TextField
           classes={{ root: styles.title }}
-          value={id ? editPost?.title : ''}
+          value={title}
           variant="standard"
           placeholder="Заголовок статьи..."
-          {...register('title', {
-            required: 'Укажите Заголовок',
-          })}
+          onChange={(e) => setTitle(e.target.value)}
           fullWidth
         />
         <TextField
-          value={id ? editPost?.tags?.join(' ') : ''}
+          value={tags}
           classes={{ root: styles.tags }}
           variant="standard"
+          onChange={(e) => setTags(e.target.value)}
           placeholder="Введите тэги через пробелы"
-          {...register('tags')}
           fullWidth
         />
         <SimpleMdeReact
           className={styles.editor}
-          value={id ? editPost?.text : text}
+          value={text}
           onChange={onChange}
           options={options}
         />
         <div className={styles.buttons}>
           <Button
-            disabled={!isValid || text === ''}
+            // disabled={!isValid || text === ''}
             type="submit"
             size="large"
             variant="contained"
           >
-            Опубликовать
+            {id ? 'Сохранить изменения' : 'Опубликовать'}
           </Button>
           <Link to="/">
             <Button size="large">Отмена</Button>
