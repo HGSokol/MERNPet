@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 
 import axios from '../../axios';
 import { PostType, PostsSliceType } from '../../@types/appTypes';
-import { RootState } from '../store';
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {

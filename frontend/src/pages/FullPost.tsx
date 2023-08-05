@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 
 import axios from '../axios';
@@ -9,7 +8,6 @@ import { Index } from '../components/AddComment';
 import { CommentsBlock } from '../components/CommentsBlock';
 import { PostType } from '../@types/appTypes';
 import { PostSkeleton } from '../components/Post/Skeleton';
-import { RootState } from '../redux/store';
 
 export const FullPost = () => {
   const { id } = useParams();

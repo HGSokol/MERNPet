@@ -13,7 +13,6 @@ import { UserInfo } from '../UserInfo';
 import { fetchRemovePost } from '../../redux/feature/posts';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
-import axios from '../../axios';
 
 interface PostTypes {
   id?: number | string;
