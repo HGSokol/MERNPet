@@ -31,6 +31,14 @@ function App() {
             }
           />
           <Route
+            path="/posts/:id/edit"
+            element={
+              <AuthRedirect>
+                <AddPost />
+              </AuthRedirect>
+            }
+          />
+          <Route
             path="/add-post"
             element={
               <AuthRedirect>

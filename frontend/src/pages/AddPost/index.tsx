@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -8,10 +8,21 @@ import { useForm } from 'react-hook-form';
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
-import { dataType, FormCreatePostValues } from '../../@types/appTypes';
+import {
+  dataType,
+  FormCreatePostValues,
+  PostType,
+} from '../../@types/appTypes';
 import axios from '../../axios';
 
 export const AddPost = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = React.useState('');
+  const [editPost, setEditPost] = React.useState<PostType | null>(null);
+  const [text, setText] = React.useState('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -24,10 +35,6 @@ export const AddPost = () => {
     },
     mode: 'onChange',
   });
-  const navigate = useNavigate();
-  const [imageUrl, setImageUrl] = React.useState('');
-  const [text, setText] = React.useState('');
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSubmitForm = async (value: FormCreatePostValues) => {
     try {
@@ -88,6 +95,18 @@ export const AddPost = () => {
     []
   );
 
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`/api/posts/${id}`)
+        .then((e) => {
+          setEditPost(e.data);
+          setImageUrl(e.data.imageUrl);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, []);
+
   return (
     <Paper style={{ padding: 30 }}>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
@@ -119,6 +138,7 @@ export const AddPost = () => {
         <br />
         <TextField
           classes={{ root: styles.title }}
+          value={id ? editPost?.title : ''}
           variant="standard"
           placeholder="Заголовок статьи..."
           {...register('title', {
@@ -127,6 +147,7 @@ export const AddPost = () => {
           fullWidth
         />
         <TextField
+          value={id ? editPost?.tags?.join(' ') : ''}
           classes={{ root: styles.tags }}
           variant="standard"
           placeholder="Введите тэги через пробелы"
@@ -135,7 +156,7 @@ export const AddPost = () => {
         />
         <SimpleMdeReact
           className={styles.editor}
-          value={text}
+          value={id ? editPost?.text : text}
           onChange={onChange}
           options={options}
         />

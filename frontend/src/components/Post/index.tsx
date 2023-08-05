@@ -10,7 +10,7 @@ import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import styles from './Post.module.scss';
 import IMG from '../../assets/noavatar.png';
 import { UserInfo } from '../UserInfo';
-import { deletePost } from '../../redux/feature/posts';
+import { fetchRemovePost } from '../../redux/feature/posts';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import axios from '../../axios';
@@ -49,11 +49,8 @@ export const Post = ({
   const dispatch = useDispatch<AppDispatch>();
 
   const onClickRemove = async () => {
-    try {
-      await axios.delete(`/api/posts/${id}`);
-      dispatch(deletePost(id));
-    } catch (error) {
-      console.log(error);
+    if (window.confirm('Вы действительно хотите удалить статью?')) {
+      dispatch(fetchRemovePost(id as string));
     }
   };
 

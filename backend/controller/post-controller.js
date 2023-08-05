@@ -128,7 +128,7 @@ export const deletePost = async (req, res) => {
         }
 
         res.status(200).json({
-          message: 'Статья успешно удалена',
+          ...post._doc,
         });
       })
       .catch((e) => {
