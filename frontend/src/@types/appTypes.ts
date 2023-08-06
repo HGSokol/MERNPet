@@ -72,3 +72,21 @@ export interface dataType {
   tags: string[];
   imageUrl: string;
 }
+
+export interface CommentType {
+  author: {
+    avatarUrl: string;
+    createdAt: string;
+    email: string;
+    lastname: string;
+    name: string;
+    password: string;
+    updatedAt: string;
+    _id: string;
+  };
+  createdAt: string;
+  post: string;
+  text: string;
+  updatedAt: string;
+  _id: string;
+}

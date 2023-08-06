@@ -18,6 +18,13 @@ const postSchema = new Schema(
       type: Number,
       default: 0,
     },
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+        required: true,
+      },
+    ],
     author: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -28,7 +35,7 @@ const postSchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
 export default model('Post', postSchema);

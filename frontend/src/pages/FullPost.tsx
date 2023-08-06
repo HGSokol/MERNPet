@@ -6,7 +6,7 @@ import axios from '../axios';
 import { Post } from '../components/Post';
 import { Index } from '../components/AddComment';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { PostType } from '../@types/appTypes';
+import { CommentType, PostType } from '../@types/appTypes';
 import { PostSkeleton } from '../components/Post/Skeleton';
 
 export const FullPost = () => {
@@ -14,6 +14,7 @@ export const FullPost = () => {
   const [data, setData] = useState<PostType | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [comment, setComment] = useState<CommentType[] | null>(null);
 
   useEffect(() => {
     axios
@@ -21,6 +22,13 @@ export const FullPost = () => {
       .then(({ data }) => {
         setData(data);
         setIsLoading(false);
+
+        axios
+          .get(`/api/comment/${id}`)
+          .then((e) => {
+            setComment(e.data);
+          })
+          .catch((e) => console.log(e));
       })
       .catch((e) => setError(true));
   }, []);
@@ -48,25 +56,7 @@ export const FullPost = () => {
       >
         {data?.text && <ReactMarkdown children={data?.text} />}
       </Post>
-      <CommentsBlock
-        items={[
-          {
-            user: {
-              fullName: 'Вася Пупкин',
-              avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
-            },
-            text: 'Это тестовый комментарий 555555',
-          },
-          {
-            user: {
-              fullName: 'Иван Иванов',
-              avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
-            },
-            text: 'When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top',
-          },
-        ]}
-        isLoading={false}
-      >
+      <CommentsBlock items={comment} isLoading={false}>
         <Index />
       </CommentsBlock>
     </>

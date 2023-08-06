@@ -46,7 +46,10 @@ export const getPost = async (req, res) => {
     Post.findOneAndUpdate(
       { _id: postId },
       { $inc: { viewsCount: 1 } },
-      { returnDocument: 'after', populate: { path: 'author' } }
+      {
+        returnDocument: 'after',
+        populate: { path: 'author' },
+      }
     )
       .then((post) => {
         if (!post) {
