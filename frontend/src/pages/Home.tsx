@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -8,11 +8,16 @@ import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { PostSkeleton } from '../components/Post/Skeleton';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { fetchPosts, fetchTags } from '../redux/feature/posts';
+import {
+  fetchPosts,
+  fetchPostsOrderedBy,
+  fetchTags,
+} from '../redux/feature/posts';
 import { AppDispatch, RootState } from '../redux/store';
 
 export const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [tabsValue, setTabsValue] = useState(0);
   const { posts, tags } = useSelector((state: RootState) => state.posts);
   const { data } = useSelector((state: RootState) => state.auth);
 
@@ -20,19 +25,19 @@ export const Home = () => {
   const isLoadingTags = posts.status === 'loading';
 
   useEffect(() => {
-    dispatch(fetchPosts());
+    tabsValue === 0 ? dispatch(fetchPosts()) : dispatch(fetchPostsOrderedBy());
     dispatch(fetchTags());
-  }, []);
+  }, [tabsValue]);
 
   return (
     <>
       <Tabs
         style={{ marginBottom: 15 }}
-        value={0}
+        value={tabsValue}
         aria-label="basic tabs example"
       >
-        <Tab label="Новые" />
-        <Tab label="Популярные" />
+        <Tab onClick={() => setTabsValue(0)} label="Новые" />
+        <Tab onClick={() => setTabsValue(1)} label="Популярные" />
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>

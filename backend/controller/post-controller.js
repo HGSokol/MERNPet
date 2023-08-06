@@ -17,6 +17,26 @@ export const getAllPosts = async (req, res) => {
     });
   }
 };
+export const getAllPostsOrderedBy = async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .sort({ viewsCount: -1 })
+      .populate('author')
+      .exec();
+    if (!posts) {
+      return res.status(404).json({
+        message: 'У вас нет статей',
+      });
+    }
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Не удалось получить статью',
+    });
+  }
+};
 
 export const getPost = async (req, res) => {
   try {
@@ -160,6 +180,27 @@ export const getTags = async (req, res) => {
       .slice(0, 5);
 
     res.status(200).json(tags);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Не удалось получить статью',
+    });
+  }
+};
+export const getIncPosts = async (req, res) => {
+  try {
+    const tag = req.body.tag;
+
+    const posts = await Post.find({ tags: tag })
+      .populate({ path: 'author' })
+      .exec();
+    if (!posts) {
+      return res.status(404).json({
+        message: 'Нет статей с таким тэгом',
+      });
+    }
+
+    res.status(200).json(posts);
   } catch (error) {
     console.log(error);
     res.status(500).json({

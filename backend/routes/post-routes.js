@@ -19,6 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 route.get('/api/posts', PostController.getAllPosts);
+route.get('/api/posts/sort', PostController.getAllPostsOrderedBy);
 route.get('/api/posts/:id', checkAuth, authError, PostController.getPost);
 route.post(
   '/api/posts',
@@ -29,6 +30,7 @@ route.post(
 );
 route.patch('/api/posts/:id', checkAuth, authError, PostController.updatePost);
 route.delete('/api/posts/:id', checkAuth, authError, PostController.deletePost);
+route.post('/api/posts/inc', PostController.getIncPosts);
 
 route.get('/api/tags', PostController.getTags);
 

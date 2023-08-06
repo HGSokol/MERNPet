@@ -8,6 +8,7 @@ import AuthRedirect from './hok/AuthRedirect';
 import { useDispatch } from 'react-redux';
 import { fetchMe } from './redux/feature/auth';
 import { AppDispatch } from './redux/store';
+import { Tag } from './pages/Tag';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -46,6 +47,7 @@ function App() {
               </AuthRedirect>
             }
           />
+          <Route path="/tags/:id" element={<Tag />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
           <Route path="*" element={<div>404 page not found</div>} />

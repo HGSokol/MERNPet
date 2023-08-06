@@ -11,6 +11,17 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     console.log(error);
   }
 });
+export const fetchPostsOrderedBy = createAsyncThunk(
+  'posts/fetchPostsOrderedBY',
+  async () => {
+    try {
+      const { data } = await axios.get('/api/posts/sort');
+      return data as PostType[];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
   try {
@@ -61,6 +72,18 @@ const postsSlice = createSlice({
       state.posts.status = 'error';
     });
     builder.addCase(fetchPosts.fulfilled, (state, { payload }) => {
+      state.posts.items = payload || [];
+      state.posts.status = 'fulfilled';
+    });
+    builder.addCase(fetchPostsOrderedBy.pending, (state) => {
+      state.posts.items = [];
+      state.posts.status = 'loading';
+    });
+    builder.addCase(fetchPostsOrderedBy.rejected, (state) => {
+      state.posts.items = [];
+      state.posts.status = 'error';
+    });
+    builder.addCase(fetchPostsOrderedBy.fulfilled, (state, { payload }) => {
       state.posts.items = payload || [];
       state.posts.status = 'fulfilled';
     });
