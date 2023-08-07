@@ -14,7 +14,7 @@ export const FullPost = () => {
   const [data, setData] = useState<PostType | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [comment, setComment] = useState<CommentType[] | null>(null);
+  const [comment, setComment] = useState<null>(null);
 
   useEffect(() => {
     axios
@@ -22,13 +22,6 @@ export const FullPost = () => {
       .then(({ data }) => {
         setData(data);
         setIsLoading(false);
-
-        axios
-          .get(`/api/comment/${id}`)
-          .then((e) => {
-            setComment(e.data);
-          })
-          .catch((e) => console.log(e));
       })
       .catch((e) => setError(true));
   }, []);
@@ -50,13 +43,13 @@ export const FullPost = () => {
         user={data?.author}
         createdAt={data?.createdAt}
         viewsCount={data?.viewsCount}
-        commentsCount={3}
+        commentsCount={data?.comments?.length}
         tags={data?.tags}
         isFullPost
       >
         {data?.text && <ReactMarkdown children={data?.text} />}
       </Post>
-      <CommentsBlock items={comment} isLoading={false}>
+      <CommentsBlock items={data?.comments!} isLoading={false}>
         <Index />
       </CommentsBlock>
     </>

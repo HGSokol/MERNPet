@@ -34,6 +34,7 @@ export const Tag = () => {
             createdAt,
             viewsCount,
             tags: postTags,
+            comments,
           } = post;
           return (
             <Post
@@ -44,7 +45,7 @@ export const Tag = () => {
               user={author}
               createdAt={createdAt}
               viewsCount={viewsCount}
-              commentsCount={3}
+              commentsCount={comments?.length}
               tags={postTags}
               isEditable={author?._id === data?._id}
             />

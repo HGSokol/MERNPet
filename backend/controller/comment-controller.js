@@ -13,9 +13,20 @@ export const createComment = async (req, res) => {
       post: idPost,
     });
 
-    const comment = await doc.save();
+    const { _id } = await doc.save();
 
-    res.status(200).json(comment);
+    Post.findByIdAndUpdate(idPost, { $push: { comments: { _id } } }).catch(
+      (error) => {
+        console.log(error);
+        res.status(500).json({
+          message: 'Не удалось создать комментарий',
+        });
+      }
+    );
+
+    res.status(200).json({
+      message: 'комментарий успешно создан',
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -23,6 +34,7 @@ export const createComment = async (req, res) => {
     });
   }
 };
+
 export const getComments = async (req, res) => {
   try {
     const posts = await Comment.find({ post: req.params.id })

@@ -46,7 +46,16 @@ export const Home = () => {
           ) : (
             posts.items.map(
               (
-                { _id, title, imageUrl, createdAt, viewsCount, author, tags },
+                {
+                  _id,
+                  title,
+                  imageUrl,
+                  createdAt,
+                  viewsCount,
+                  author,
+                  tags,
+                  comments,
+                },
                 i
               ) => {
                 return (
@@ -58,7 +67,7 @@ export const Home = () => {
                     user={author}
                     createdAt={createdAt}
                     viewsCount={viewsCount}
-                    commentsCount={3}
+                    commentsCount={comments?.length}
                     tags={tags}
                     isEditable={author?._id === data?._id}
                   />

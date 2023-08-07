@@ -1,3 +1,21 @@
+export interface CommentType {
+  author: {
+    avatarUrl: string;
+    createdAt: string;
+    email: string;
+    lastname: string;
+    name: string;
+    password: string;
+    updatedAt: string;
+    _id: string;
+  };
+  createdAt: string;
+  post: string;
+  text: string;
+  updatedAt: string;
+  _id: string;
+}
+
 export interface PostType {
   author?: {
     avatarUrl?: string;
@@ -9,6 +27,7 @@ export interface PostType {
     updatedAt?: string;
     _id?: string;
   };
+  comments?: CommentType[]
   createdAt?: string;
   tags?: string[];
   text?: string;
@@ -73,20 +92,4 @@ export interface dataType {
   imageUrl: string;
 }
 
-export interface CommentType {
-  author: {
-    avatarUrl: string;
-    createdAt: string;
-    email: string;
-    lastname: string;
-    name: string;
-    password: string;
-    updatedAt: string;
-    _id: string;
-  };
-  createdAt: string;
-  post: string;
-  text: string;
-  updatedAt: string;
-  _id: string;
-}
+

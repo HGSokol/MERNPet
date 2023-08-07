@@ -2,7 +2,10 @@ import Post from '../model/Post.js';
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate('author').exec();
+    const posts = await Post.find()
+      .populate('author')
+      .populate({ path: 'comments', populate: { path: 'author' } })
+      .exec();
     if (!posts) {
       return res.status(404).json({
         message: 'У вас нет статей',
@@ -22,6 +25,7 @@ export const getAllPostsOrderedBy = async (req, res) => {
     const posts = await Post.find()
       .sort({ viewsCount: -1 })
       .populate('author')
+      .populate({ path: 'comments', populate: { path: 'author' } })
       .exec();
     if (!posts) {
       return res.status(404).json({
@@ -48,7 +52,15 @@ export const getPost = async (req, res) => {
       { $inc: { viewsCount: 1 } },
       {
         returnDocument: 'after',
-        populate: { path: 'author' },
+        populate: [
+          { path: 'author' },
+          {
+            path: 'comments',
+            populate: {
+              path: 'author',
+            },
+          },
+        ],
       }
     )
       .then((post) => {
@@ -196,6 +208,7 @@ export const getIncPosts = async (req, res) => {
 
     const posts = await Post.find({ tags: tag })
       .populate({ path: 'author' })
+      .populate({ path: 'comments', populate: { path: 'author' } })
       .exec();
     if (!posts) {
       return res.status(404).json({
