@@ -1,5 +1,7 @@
 MERN pet blog
 
+npm i
+
 `start`
 * npm run client:dev
 * npm run server:dev
