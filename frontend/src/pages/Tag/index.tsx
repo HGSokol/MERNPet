@@ -1,10 +1,10 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import axios from '../../axios';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
+import axios from '../../axios';
 import { PostType } from '../../@types/appTypes';
 import { Post } from '../../components';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 
 export const Tag = () => {

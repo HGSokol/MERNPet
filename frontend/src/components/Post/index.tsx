@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Clear';
@@ -11,7 +12,6 @@ import styles from './Post.module.scss';
 import IMG from '../../assets/noavatar.png';
 import { UserInfo } from '../UserInfo';
 import { fetchRemovePost } from '../../redux/feature/posts';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 
 interface PostTypes {

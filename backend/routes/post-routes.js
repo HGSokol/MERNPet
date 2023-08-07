@@ -40,6 +40,13 @@ route.post(
   authError,
   CommentController.createComment
 );
+route.delete(
+  '/api/comment',
+  CommentValidation.commentDeleteValidation,
+  checkAuth,
+  authError,
+  CommentController.deleteComment
+);
 
 route.get('/api/tags', PostController.getTags);
 

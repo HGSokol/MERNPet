@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import Container from '@mui/material/Container';
 
 import { Header } from './components';
 import { Home, FullPost, Registration, AddPost, Login } from './pages';
 import AuthRedirect from './hok/AuthRedirect';
-import { useDispatch } from 'react-redux';
 import { fetchMe } from './redux/feature/auth';
 import { AppDispatch } from './redux/store';
 import { Tag } from './pages/Tag';

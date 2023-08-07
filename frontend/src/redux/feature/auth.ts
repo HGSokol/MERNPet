@@ -17,7 +17,7 @@ export const fetchUserRegister = createAsyncThunk(
 
       localStorage.setItem('token', jwt);
 
-      return data;
+      return data._doc;
     } catch (error) {
       console.log(error);
     }

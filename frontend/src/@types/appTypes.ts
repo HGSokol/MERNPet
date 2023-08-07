@@ -1,4 +1,7 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface AuthorType {
+  _id: string;
   avatarUrl: string;
   createdAt: string;
   email: string;
@@ -6,7 +9,6 @@ export interface AuthorType {
   name: string;
   password: string;
   updatedAt: string;
-  _id: string;
 }
 
 export interface CommentType {
@@ -72,6 +74,8 @@ export interface dataType {
 }
 
 export interface CommentBlockType {
+  setError: Dispatch<SetStateAction<boolean>>,
+  setData: Dispatch<SetStateAction<PostType | null>>,
   items: CommentType[] | null;
   children: React.ReactNode;
   isLoading: Boolean;

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import styles from './Login.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchUser, selectIsAuth } from '../../redux/feature/auth';
 import { FormLoginValues } from '../../@types/appTypes';

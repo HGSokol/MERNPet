@@ -1,11 +1,10 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
 import styles from './Header.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-
 import { AppDispatch, RootState } from '../../redux/store';
 import { logout, selectIsAuth } from '../../redux/feature/auth';
 

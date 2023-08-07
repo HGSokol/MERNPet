@@ -48,8 +48,13 @@ export const FullPost = () => {
       >
         {data?.text && <ReactMarkdown children={data?.text} />}
       </Post>
-      <CommentsBlock items={data?.comments!} isLoading={false}>
-        <Index />
+      <CommentsBlock
+        setError={setError}
+        setData={setData}
+        items={data?.comments!}
+        isLoading={false}
+      >
+        <Index setError={setError} setData={setData} />
       </CommentsBlock>
     </>
   );
