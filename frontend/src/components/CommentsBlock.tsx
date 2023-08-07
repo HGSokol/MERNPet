@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
@@ -8,13 +8,7 @@ import List from '@mui/material/List';
 import Skeleton from '@mui/material/Skeleton';
 
 import { SideBlock } from './SideBlock';
-import { CommentsBlockTypes, CommentType } from '../@types/appTypes';
-
-interface CommentBlockType {
-  items: CommentType[] | null;
-  children: React.ReactNode;
-  isLoading: Boolean;
-}
+import { CommentBlockType } from '../@types/appTypes';
 
 export const CommentsBlock = ({
   items,

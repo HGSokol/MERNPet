@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './Registration.module.scss';

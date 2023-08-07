@@ -9,9 +9,9 @@ import { RootState } from '../../redux/store';
 
 export const Tag = () => {
   const { data } = useSelector((state: RootState) => state.auth);
-
   const [tags, setTags] = useState<PostType[] | null>(null);
   const params = useParams();
+
   useEffect(() => {
     axios
       .post('/api/posts/inc', { tag: params.id })
@@ -21,6 +21,7 @@ export const Tag = () => {
       })
       .catch((e) => console.log(e));
   }, []);
+
   return (
     <>
       <span>{`#${params.id}`}</span>

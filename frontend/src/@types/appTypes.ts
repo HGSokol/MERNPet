@@ -1,14 +1,16 @@
+export interface AuthorType {
+  avatarUrl: string;
+  createdAt: string;
+  email: string;
+  lastname: string;
+  name: string;
+  password: string;
+  updatedAt: string;
+  _id: string;
+}
+
 export interface CommentType {
-  author: {
-    avatarUrl: string;
-    createdAt: string;
-    email: string;
-    lastname: string;
-    name: string;
-    password: string;
-    updatedAt: string;
-    _id: string;
-  };
+  author: AuthorType,
   createdAt: string;
   post: string;
   text: string;
@@ -17,16 +19,7 @@ export interface CommentType {
 }
 
 export interface PostType {
-  author?: {
-    avatarUrl?: string;
-    createdAt?: string;
-    email?: string;
-    lastname?: string;
-    name?: string;
-    password?: string;
-    updatedAt?: string;
-    _id?: string;
-  };
+  author: AuthorType,
   comments?: CommentType[]
   createdAt?: string;
   tags?: string[];
@@ -50,7 +43,7 @@ export interface PostsSliceType {
 }
 
 export interface AuthSliceType {
-  data: PostType['author'] | null;
+  data: AuthorType | null;
   status: 'loading' | 'error' | 'fulfilled';
 }
 
@@ -71,25 +64,17 @@ export interface TagsBlockType {
   isLoading: boolean;
 }
 
-export interface UserType {
-  user?: {
-    fullName: string;
-    avatarUrl: string;
-  };
-  text?: string;
-}
-
-export interface CommentsBlockTypes {
-  items?: UserType[];
-  children?: React.ReactNode;
-  isLoading?: boolean;
-}
-
 export interface dataType {
   title: string;
   text: string;
   tags: string[];
   imageUrl: string;
+}
+
+export interface CommentBlockType {
+  items: CommentType[] | null;
+  children: React.ReactNode;
+  isLoading: Boolean;
 }
 
 

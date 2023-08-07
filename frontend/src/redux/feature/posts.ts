@@ -11,6 +11,7 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     console.log(error);
   }
 });
+
 export const fetchPostsOrderedBy = createAsyncThunk(
   'posts/fetchPostsOrderedBY',
   async () => {
@@ -110,7 +111,5 @@ const postsSlice = createSlice({
     });
   },
 });
-
-// export const { } = postsSlice.actions;
 
 export default postsSlice.reducer;

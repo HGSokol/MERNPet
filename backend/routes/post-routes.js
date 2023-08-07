@@ -33,13 +33,6 @@ route.patch('/api/posts/:id', checkAuth, authError, PostController.updatePost);
 route.delete('/api/posts/:id', checkAuth, authError, PostController.deletePost);
 route.post('/api/posts/inc', PostController.getIncPosts);
 
-// route.get(
-//   '/api/comment/:id',
-//   checkAuth,
-//   authError,
-//   CommentController.getComments
-// );
-
 route.post(
   '/api/comment',
   CommentValidation.commentCreateValidation,

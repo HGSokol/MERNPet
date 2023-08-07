@@ -7,7 +7,6 @@ import Grid from '@mui/material/Grid';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { PostSkeleton } from '../components/Post/Skeleton';
-import { CommentsBlock } from '../components/CommentsBlock';
 import {
   fetchPosts,
   fetchPostsOrderedBy,

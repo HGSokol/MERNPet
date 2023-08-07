@@ -6,7 +6,7 @@ import axios from '../axios';
 import { Post } from '../components/Post';
 import { Index } from '../components/AddComment';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { CommentType, PostType } from '../@types/appTypes';
+import { PostType } from '../@types/appTypes';
 import { PostSkeleton } from '../components/Post/Skeleton';
 
 export const FullPost = () => {
@@ -14,7 +14,6 @@ export const FullPost = () => {
   const [data, setData] = useState<PostType | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [comment, setComment] = useState<null>(null);
 
   useEffect(() => {
     axios
@@ -23,7 +22,7 @@ export const FullPost = () => {
         setData(data);
         setIsLoading(false);
       })
-      .catch((e) => setError(true));
+      .catch(() => setError(true));
   }, []);
 
   if (isLoading) {
