@@ -3,8 +3,11 @@ import Post from '../model/Post.js';
 export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
-      .populate('author')
-      .populate({ path: 'comments', populate: { path: 'author' } })
+      .populate({ path: 'author', select: '-password' })
+      .populate({
+        path: 'comments',
+        populate: { path: 'author', select: '-password' },
+      })
       .exec();
     if (!posts) {
       return res.status(404).json({
@@ -53,11 +56,12 @@ export const getPost = async (req, res) => {
       {
         returnDocument: 'after',
         populate: [
-          { path: 'author' },
+          { path: 'author', select: '-password' },
           {
             path: 'comments',
             populate: {
               path: 'author',
+              select: '-password',
             },
           },
         ],
@@ -207,8 +211,11 @@ export const getIncPosts = async (req, res) => {
     const tag = req.body.tag;
 
     const posts = await Post.find({ tags: tag })
-      .populate({ path: 'author' })
-      .populate({ path: 'comments', populate: { path: 'author' } })
+      .populate({ path: 'author', select: '-password' })
+      .populate({
+        path: 'comments',
+        populate: { path: 'author', select: '-password' },
+      })
       .exec();
     if (!posts) {
       return res.status(404).json({
