@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -10,9 +10,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import styles from './Header.module.scss';
 import { AppDispatch, RootState } from '../../redux/store';
 import { logout, selectIsAuth } from '../../redux/feature/auth';
+import { SwipeableDrawer } from '@mui/material';
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const isAuth = useSelector((state: RootState) =>
@@ -28,8 +30,20 @@ export const Header = () => {
     setOpen(false);
   };
 
+  const toggleDrawer = () => {
+    setOpenMenu((state) => !state);
+  };
+
   return (
     <div className={styles.root}>
+      <SwipeableDrawer
+        anchor={'left'}
+        open={openMenu}
+        onClose={() => toggleDrawer()}
+        onOpen={() => toggleDrawer()}
+      >
+        {<div>User Info in progress</div>}
+      </SwipeableDrawer>
       <Dialog
         open={open}
         onClose={() => handleClose(false)}
@@ -51,6 +65,15 @@ export const Header = () => {
           <Link className={styles.logo} to="/">
             <div>MERN BLOG</div>
           </Link>
+          {isAuth && (
+            <Link
+              onClick={() => setOpenMenu(true)}
+              className={styles.logo}
+              to="/"
+            >
+              <div>User Info</div>
+            </Link>
+          )}
           <div className={styles.buttons}>
             {isAuth ? (
               <>
