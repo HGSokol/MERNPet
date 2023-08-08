@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,10 @@ import DeleteIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
 import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 import styles from './Post.module.scss';
 import IMG from '../../assets/noavatar.png';
@@ -45,16 +49,34 @@ export const Post = ({
   isFullPost,
   isEditable,
 }: PostTypes) => {
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const onClickRemove = async () => {
-    if (window.confirm('Вы действительно хотите удалить статью?')) {
+  const handleClose = (value?: boolean) => {
+    if (value) {
       dispatch(fetchRemovePost(id as string));
     }
+    setOpen(false);
   };
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
+      <Dialog
+        open={open}
+        onClose={() => handleClose(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {'Вы действительно хотите удалить статью?'}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={() => handleClose(true)} autoFocus>
+            Да
+          </Button>
+          <Button onClick={() => handleClose(false)}>Отмена</Button>
+        </DialogActions>
+      </Dialog>
       {isEditable && (
         <div className={styles.editButtons}>
           <Link to={`/posts/${id}/edit`}>
@@ -62,7 +84,7 @@ export const Post = ({
               <EditIcon />
             </IconButton>
           </Link>
-          <IconButton onClick={onClickRemove} color="secondary">
+          <IconButton onClick={() => setOpen(true)} color="secondary">
             <DeleteIcon />
           </IconButton>
         </div>
