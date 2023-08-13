@@ -20,6 +20,7 @@ export const Header = () => {
   const isAuth = useSelector((state: RootState) =>
     selectIsAuth(state.auth.data)
   );
+  const data = useSelector((state: RootState) => state.auth.data);
 
   const handleClose = (value?: boolean) => {
     if (value) {
@@ -42,7 +43,22 @@ export const Header = () => {
         onClose={() => toggleDrawer()}
         onOpen={() => toggleDrawer()}
       >
-        {<div>User Info in progress</div>}
+        {data && (
+          <div
+            style={{
+              width: '200px',
+              display: 'flex',
+              flexDirection: 'column',
+              // justifyContent: ' center',
+            }}
+          >
+            <div>
+              <div>{`${data?.name} ${data?.lastname}`}</div>
+              <div>{`${data?.email}`}</div>
+              <div>{`${new Date(data?.createdAt).toLocaleDateString()}`}</div>
+            </div>
+          </div>
+        )}
       </SwipeableDrawer>
       <Dialog
         open={open}
