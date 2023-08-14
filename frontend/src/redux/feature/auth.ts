@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
 import {
   AuthSliceType,
-  FormLoginValues,
   FormRegistrationValues,
   PostType,
 } from '../../@types/appTypes';
@@ -26,7 +25,11 @@ export const fetchUserRegister = createAsyncThunk(
 
 export const fetchUser = createAsyncThunk(
   'auth/fetchUser',
-  async (params: FormLoginValues & { token: string | null }) => {
+  async (
+    params: Pick<FormRegistrationValues, 'email' | 'password'> & {
+      token: string | null;
+    }
+  ) => {
     try {
       const { token, ...userInfo } = params;
       const user = await axios.post('/api/login', userInfo);

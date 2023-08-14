@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import styles from './Login.module.scss';
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchUser, selectIsAuth } from '../../redux/feature/auth';
-import { FormLoginValues } from '../../@types/appTypes';
+import { FormRegistrationValues } from '../../@types/appTypes';
 
 export const Login = () => {
   const isAuth = useSelector((state: RootState) => {
@@ -31,7 +31,7 @@ export const Login = () => {
     handleSubmit,
     setError,
     formState: { errors, isValid },
-  } = useForm<FormLoginValues>({
+  } = useForm<Pick<FormRegistrationValues, 'email' | 'password'>>({
     defaultValues: {
       email: '',
       password: '',
@@ -39,7 +39,9 @@ export const Login = () => {
     mode: 'onChange',
   });
 
-  const fetchAuth = (values: FormLoginValues) => {
+  const fetchAuth = (
+    values: Pick<FormRegistrationValues, 'email' | 'password'>
+  ) => {
     dispatch(
       fetchUser({
         token,

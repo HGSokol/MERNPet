@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from 'react';
 
 export interface AuthorType {
   _id: string;
@@ -12,7 +12,7 @@ export interface AuthorType {
 }
 
 export interface CommentType {
-  author: AuthorType,
+  author: AuthorType;
   createdAt: string;
   post: string;
   text: string;
@@ -21,8 +21,8 @@ export interface CommentType {
 }
 
 export interface PostType {
-  author: AuthorType,
-  comments?: CommentType[]
+  author: AuthorType;
+  comments?: CommentType[];
   createdAt?: string;
   tags?: string[];
   text?: string;
@@ -56,11 +56,6 @@ export type FormRegistrationValues = {
   password: string;
 };
 
-export type FormLoginValues = {
-  email: string;
-  password: string;
-};
-
 export interface TagsBlockType {
   items: string[];
   isLoading: boolean;
@@ -74,11 +69,9 @@ export interface dataType {
 }
 
 export interface CommentBlockType {
-  setError: Dispatch<SetStateAction<boolean>>,
-  setData: Dispatch<SetStateAction<PostType | null>>,
+  setError: Dispatch<SetStateAction<boolean>>;
+  setData: Dispatch<SetStateAction<PostType | null>>;
   items: CommentType[] | null;
   children: React.ReactNode;
   isLoading: Boolean;
 }
-
-

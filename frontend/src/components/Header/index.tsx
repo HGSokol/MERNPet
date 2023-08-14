@@ -46,16 +46,22 @@ export const Header = () => {
         {data && (
           <div
             style={{
+              marginTop: '20px',
               width: '200px',
               display: 'flex',
               flexDirection: 'column',
-              // justifyContent: ' center',
+              justifyContent: 'center',
+              alignItems: ' center',
+              gap: '20px',
             }}
           >
-            <div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div>{`${data?.name} ${data?.lastname}`}</div>
               <div>{`${data?.email}`}</div>
               <div>{`${new Date(data?.createdAt).toLocaleDateString()}`}</div>
+            </div>
+            <div>
+              <div>Мои посты</div>
             </div>
           </div>
         )}
