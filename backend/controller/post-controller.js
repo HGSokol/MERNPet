@@ -231,3 +231,27 @@ export const getIncPosts = async (req, res) => {
     });
   }
 };
+
+export const getUserPosts = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      res.status(404).json({
+        message: 'ошибка получения статей',
+      });
+    }
+
+    const docs = await Post.find({ author: req.params.id }).populate('author');
+    if (!docs) {
+      return res.status(404).json({
+        message: 'Нет статей',
+      });
+    }
+
+    res.status(200).json(docs);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Не удалось получить статьи',
+    });
+  }
+};

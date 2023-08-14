@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -61,7 +61,7 @@ export const Header = () => {
               <div>{`${new Date(data?.createdAt).toLocaleDateString()}`}</div>
             </div>
             <div>
-              <div>Мои посты</div>
+              <Link to={`/userPosts/${data?._id}`}>Мои посты</Link>
             </div>
           </div>
         )}

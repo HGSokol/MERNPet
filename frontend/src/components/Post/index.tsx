@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,7 @@ import IMG from '../../assets/noavatar.png';
 import { UserInfo } from '../UserInfo';
 import { fetchRemovePost } from '../../redux/feature/posts';
 import { AppDispatch } from '../../redux/store';
+import { PostType } from '../../@types/appTypes';
 
 interface PostTypes {
   id?: number | string;
@@ -34,6 +35,7 @@ interface PostTypes {
   children?: React.ReactNode;
   isFullPost?: boolean;
   isEditable?: boolean;
+  setPosts?: Dispatch<SetStateAction<PostType[] | null>>;
 }
 
 export const Post = ({
@@ -48,6 +50,7 @@ export const Post = ({
   children,
   isFullPost,
   isEditable,
+  setPosts,
 }: PostTypes) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
@@ -55,6 +58,8 @@ export const Post = ({
   const handleClose = (value?: boolean) => {
     if (value) {
       dispatch(fetchRemovePost(id as string));
+
+      setPosts && setPosts((prev) => prev!.filter((e) => e._id !== id));
     }
     setOpen(false);
   };

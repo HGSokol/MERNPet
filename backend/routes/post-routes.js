@@ -1,9 +1,8 @@
 import express from 'express';
 import multer from 'multer';
 
-import { PostController, CommentController } from '../controller/index.js';
+import { PostController } from '../controller/index.js';
 import * as PostValidations from '../validations/post.js';
-import * as CommentValidation from '../validations/comment.js';
 import { checkAuth, authError } from '../utils/index.js';
 
 const route = express.Router();
@@ -31,22 +30,13 @@ route.post(
 );
 route.patch('/api/posts/:id', checkAuth, authError, PostController.updatePost);
 route.delete('/api/posts/:id', checkAuth, authError, PostController.deletePost);
+route.get(
+  '/api/userPosts/:id',
+  checkAuth,
+  authError,
+  PostController.getUserPosts
+);
 route.post('/api/posts/inc', PostController.getIncPosts);
-
-route.post(
-  '/api/comment',
-  CommentValidation.commentCreateValidation,
-  checkAuth,
-  authError,
-  CommentController.createComment
-);
-route.delete(
-  '/api/comment',
-  CommentValidation.commentDeleteValidation,
-  checkAuth,
-  authError,
-  CommentController.deleteComment
-);
 
 route.get('/api/tags', PostController.getTags);
 
